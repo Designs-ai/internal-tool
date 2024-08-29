@@ -62,7 +62,7 @@ function App() {
 
   async function getFileData(file: FileMeta, id: number) {
     if (window.Worker) {
-      const worker = new Worker("/workers/getDataWorker.js");
+      const worker = new Worker("workers/getDataWorker.js");
       worker.postMessage({ file, id });
       setCount((p) => p + 1);
 
