@@ -40,7 +40,7 @@ const RenderDirectory = ({ data }: { data: any }) => {
   );
 };
 
-function TranslationFileExport() {
+function LocaleToCSV() {
   // const [fileStructure, setFileStructure] = useState<any>();
   const [count, setCount] = useState<number>(0);
   const [csvData, setCsvData] = useState<Record<string, any>>({});
@@ -255,4 +255,4 @@ function TranslationFileExport() {
   );
 }
 
-export default TranslationFileExport;
+export default LocaleToCSV;
