@@ -14,7 +14,9 @@ const handleExport = async (text: string, filename: string) => {
         .replace(/,"/g, ";")
         .slice(0, -1)
         .split(";");
-      fullObj[lang][key] = values[idx] || "";
+      if (key) {
+        fullObj[lang][key] = values[idx] || "";
+      }
     });
   });
 
