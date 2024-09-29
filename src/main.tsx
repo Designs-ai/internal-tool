@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import LocaleToCSV from "./tools/LocaleToCSV.tsx";
 import { BreadcrumbLayout } from "./shared/BreadcrumbLayout.tsx";
+import CSVToLocale from "./tools/CSVToLocale.tsx";
 
 const CommonLayout: FunctionComponent<PropsWithChildren> = ({ children }) => (
   <>
@@ -30,7 +31,7 @@ createRoot(document.getElementById("root")!).render(
           path="/csv-to-locale"
           element={
             <CommonLayout>
-              <LocaleToCSV />
+              <CSVToLocale />
             </CommonLayout>
           }
         />
