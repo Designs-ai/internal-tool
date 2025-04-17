@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { group, isEmpty, pick } from "moderndash";
+import writeAndDownloadCSV from "../utils/writeAndDownloadCSV";
 
 declare global {
   interface Window {
@@ -180,16 +181,7 @@ function LocaleToCSV() {
       Object.entries(val).forEach(([k, v]: [string, any]) => {
         data += `${k},"${v["en"]}","${v["cn"]}","${v["cz"]}","${v["de"]}","${v["es"]}","${v["fr"]}","${v["id"]}","${v["it"]}","${v["jp"]}","${v["kr"]}","${v["pl"]}","${v["pt"]}","${v["ru"]}","${v["tr"]}","${v["tw"]}"\r\n`;
       });
-
-      const blob = new Blob([header + data], {
-        type: "text/csv;charset=utf-8",
-      });
-
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `${filename}.csv`;
-      link.click();
-
+      writeAndDownloadCSV({ data, filename, header });
       // console.log({ data });
       setCsvData({});
     }

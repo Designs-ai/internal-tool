@@ -6,6 +6,7 @@ import "./index.css";
 import LocaleToCSV from "./tools/LocaleToCSV.tsx";
 import { BreadcrumbLayout } from "./shared/BreadcrumbLayout.tsx";
 import CSVToLocale from "./tools/CSVToLocale.tsx";
+import HTMLToCSV from "./tools/HTMLToCSV.tsx";
 
 const CommonLayout: FunctionComponent<PropsWithChildren> = ({ children }) => (
   <>
@@ -32,6 +33,14 @@ createRoot(document.getElementById("root")!).render(
           element={
             <CommonLayout>
               <CSVToLocale />
+            </CommonLayout>
+          }
+        />
+        <Route
+          path="/html-to-csv"
+          element={
+            <CommonLayout>
+              <HTMLToCSV />
             </CommonLayout>
           }
         />

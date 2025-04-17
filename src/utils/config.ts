@@ -9,4 +9,9 @@ export const appList = [
     path: "/csv-to-locale",
     icon: "huh.gif",
   },
+  {
+    name: "HTML to CSV",
+    path: "/html-to-csv",
+    icon: "happy.gif",
+  },
 ];
