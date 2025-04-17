@@ -78,7 +78,7 @@ function HTMLToCSV() {
         <h1>Extract website content into CSV</h1>
         <ol>
           <li className="text-lg">Put in the website page URL</li>
-          <li className="text-lg">Click the file to export</li>
+          <li className="text-lg">Hit enter to download the csv file</li>
         </ol>
 
         <form
