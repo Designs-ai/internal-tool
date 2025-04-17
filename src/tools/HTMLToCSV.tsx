@@ -18,60 +18,59 @@ const tags = [
   "blockquote",
 ];
 
-async function extractStructuredTextFromURL(url: string, stopIfError = false) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+async function extractStructuredTextFromURL(url: string) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-    const html = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const results: Partial<Record<string, (string | undefined)[]>> = {};
+  const html = await response.text();
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  const results: Partial<Record<string, (string | undefined)[]>> = {};
 
-    for (const tag of tags) {
-      const elements = doc.querySelectorAll(tag);
-      results[tag] = Array.from(elements)
-        .map((el) => el.textContent?.trim())
-        .filter(Boolean);
-    }
-
-    let data = "";
-    Object.entries(results).forEach(([k, v]) => {
-      if (v && v.length > 0) {
-        v.forEach((v2) => {
-          data += `${k},"${v2}"\r\n`;
-        });
-      }
-    });
-
-    writeAndDownloadCSV({
-      filename: `${new URL(url).pathname.replace(/\//g, "_")}`,
-      data,
-    });
-  } catch (error) {
-    if (stopIfError) {
-      console.error("Error extracting structured text:", error);
-      alert("omaigaddd... got error~ \ncheck console tab bruh");
-    } else {
-      await extractStructuredTextFromURL(
-        "https://api.allorigins.win/get?url=" + encodeURIComponent(url),
-        true
-      );
-    }
+  for (const tag of tags) {
+    const elements = doc.querySelectorAll(tag);
+    results[tag] = Array.from(elements)
+      .map((el) => el.textContent?.trim())
+      .filter(Boolean);
   }
+
+  let data = "";
+  Object.entries(results).forEach(([k, v]) => {
+    if (v && v.length > 0) {
+      v.forEach((v2) => {
+        data += `${k},"${v2}"\r\n`;
+      });
+    }
+  });
+
+  writeAndDownloadCSV({
+    filename: `${new URL(url).pathname.replace(/\//g, "_")}`,
+    data,
+  });
 }
 
 function HTMLToCSV() {
   const [loading, setLoading] = useState(false);
-  const handleReadURL = useCallback((e: React.ChangeEvent<HTMLFormElement>) => {
-    setLoading(true);
-    e.preventDefault();
-    extractStructuredTextFromURL(
-      e.target.getElementsByTagName("input")[0].value
-    ).finally(() => {
-      setLoading(false);
-    });
-  }, []);
+  const handleReadURL = useCallback(
+    async (e: React.ChangeEvent<HTMLFormElement>) => {
+      setLoading(true);
+      e.preventDefault();
+      const theUrl = e.target.getElementsByTagName("input")[0].value;
+      try {
+        await extractStructuredTextFromURL(theUrl).catch(async (error) => {
+          console.error("Error extracting structured text:", error);
+          await extractStructuredTextFromURL(
+            "https://api.allorigins.win/get?url=" + encodeURIComponent(theUrl)
+          );
+        });
+      } catch {
+        alert("omaigaddd... got error~ \ncheck console tab bruh");
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   return (
     <div>
