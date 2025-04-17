@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import writeAndDownloadCSV from "../utils/writeAndDownloadCSV";
 
 // Define the tags you're interested in
@@ -18,7 +18,7 @@ const tags = [
   "blockquote",
 ];
 
-async function extractStructuredTextFromURL(url: string) {
+async function extractStructuredTextFromURL(url: string, stopIfError = false) {
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -49,17 +49,28 @@ async function extractStructuredTextFromURL(url: string) {
       data,
     });
   } catch (error) {
-    console.error("Error extracting structured text:", error);
-    alert("omaigaddd... got error~ \ncheck console tab bruh");
+    if (stopIfError) {
+      console.error("Error extracting structured text:", error);
+      alert("omaigaddd... got error~ \ncheck console tab bruh");
+    } else {
+      await extractStructuredTextFromURL(
+        "https://api.allorigins.win/get?url=" + encodeURIComponent(url),
+        true
+      );
+    }
   }
 }
 
 function HTMLToCSV() {
+  const [loading, setLoading] = useState(false);
   const handleReadURL = useCallback((e: React.ChangeEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     extractStructuredTextFromURL(
       e.target.getElementsByTagName("input")[0].value
-    );
+    ).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -81,7 +92,9 @@ function HTMLToCSV() {
             className="input w-4/6 rounded-lg"
             type="text"
             required
+            disabled={loading}
           />
+          {loading && <span className="loading loading-dots loading-xl"></span>}
         </form>
       </div>
     </div>
